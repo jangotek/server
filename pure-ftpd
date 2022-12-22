@@ -1,0 +1,15 @@
+Install:
+sudo apt -y install pure-ftpd
+sudo echo "yes" > /etc/pure-ftpd/conf/Daemonize
+sudo echo "yes" > /etc/pure-ftpd/conf/NoAnonymous
+echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
+only IPV4 if not need IPv6
+echo "yes" > /etc/pure-ftpd/conf/IPV4Only 
+sudo systemctl restart pure-ftpd 
+
+SSL:
+cd /etc/ssl/private
+sudo openssl req -x509 -nodes -newkey rsa:2048 -keyout pure-ftpd.pem -out pure-ftpd.pem -days 365
+chmod 600 pure-ftpd.pem 
+echo "2" > /etc/pure-ftpd/conf/TLS 
+systemctl restart pure-ftpd
