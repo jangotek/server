@@ -1,0 +1,44 @@
+Web hosting at home with Cloudflare Tunnel
+
+Requirements:
+Domain Name
+Cloudflare Account
+Ubuntu Server 20.04
+
+Install:
+https://pkg.cloudflare.com/index.html
+https://pkg.cloudflare.com/index.html#ubuntu-focal
+# Add cloudflare gpg key
+sudo mkdir -p --mode=0755 /usr/share/keyrings
+curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+
+# Add this repo to your apt repositories
+echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared focal main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+
+# install cloudflared
+sudo apt-get update && sudo apt-get install cloudflared
+
+Authenticate:
+cloudflared tunnel login
+
+Create tunnel:
+cloudflared tunnel create jangobit
+
+Create a configuration file:
+
+nano config.yml
+tunnel: <Tunnel-UUID>
+credentials-file: /root/.cloudflared/<tunnel-UUID>.json
+originRequest:
+  originServerName: jangobit.tk
+ingress:
+  - hostname: www.jangobit.tk
+    service: http://localhost:80
+  - service: http_status:404
+
+cloudflared tunnel route dns jangobit www.jangobit.tk
+cloudflared tunnel run jangobit
+
+cloudflared service install
+sudo systemctl enable cloudflared
+sudo systemctl status cloudflared
