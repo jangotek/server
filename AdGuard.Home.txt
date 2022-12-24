@@ -1,0 +1,23 @@
+DNS Server at Home with AdGuard Home
+
+Free and open source, powerful network-wide ads & trackers blocking DNS server. 
+
+Install:
+curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v
+
+http://192.168.0.30:3000
+
+sudo /opt/AdGuardHome/AdGuardHome -s status
+
+Fixing:
+validating ports: listen tcp 0.0.0.0:53: bind: address already in use
+
+sudo mkdir -p /etc/systemd/resolved.conf.d
+nano /etc/systemd/resolved.conf.d/adguardhome.conf
+[Resolve]
+DNS=127.0.0.1
+DNSStubListener=no
+
+sudo mv /etc/resolv.conf /etc/resolv.conf.backup
+sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+sudo systemctl reload-or-restart systemd-resolved
