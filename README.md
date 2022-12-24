@@ -1,2 +1,2 @@
 # server
-Server information at command
+Server information and command
